@@ -10,13 +10,12 @@
 
 require_once 'SSLCommerz.php';
 
-
+define('BASE_URL', 'http://bsccm.test/');
 
 
 add_action('init', 'cs_ninja_sslcommerz_payment_process');
 function cs_ninja_sslcommerz_payment_process() {
     session_start();
-    define('BASE_URL', 'http://bsccm.test/');
 	global $wpdb;
     if (stripos($_SERVER['REQUEST_URI'], 'payment-process') !== false) {
 		$id = $_GET['id'];
@@ -40,6 +39,7 @@ function cs_ninja_sslcommerz_payment_process() {
             $data['cancel_url'] = BASE_URL . 'event-and-workshop-registration';
             unset($_SESSION['payment_info']);
             $_SESSION['payment_info'] = $data;
+            $_SESSION['payment_info']['submission_id'] = $id;
 
         	$sslCommerz->initiate($data);
 		}		
@@ -111,9 +111,26 @@ function cs_payment_success()
         $output .= '<h2>Event and Workshop Registration</h2>';
         $output .= '<h3>Something is wrong!! We are unable to accept your payment!!</h3><br>';
     } 
+    unset($_SESSION['payment_info']);
     //wp_mail($data['cus_email'], 'Event and Workshop Registration', $output . '<br><br> - BSCCM Team', array('Content-Type: text/html; charset=UTF-8'));
     return $output;
 }
 
+function payment_pending()
+{
+    $registration_link = "<p class='mb-0 text-center'>For online registration, Click <a href='".$BASE_URL."event-and-workshop-registration/'>CRITICON BANGLADESH 2019</a>.</p>";
+    if (array_key_exists('payment_info', $_SESSION) && !empty($_SESSION['payment_info']['submission_id'])) {
+        $output = "<p class='alert alert-warning'>You have already completed your regsitration, Please complete your payment <a href='".BASE_URL."payment-process?id=".$_SESSION['payment_info']['submission_id']."'>Click to Continue.</a></p>";
+        $output .= "<div class='text-center'>OR</div>";
+        $output .= $registration_link;
+
+        return $output;
+    }
+    $output = "<div class='alert alert-success' role='alert'><h4 class='alert-heading text-center'>WANNA JOIN THIS EVENT?</h4><p class='text-center'>Please register through online and make payment.</p><hr>";
+    return $output . $registration_link . '</div>';
+}
+
 add_shortcode('cs_payment', 'cs_payment_success');
+
+add_shortcode('cs_pending_payment', 'payment_pending');
 
