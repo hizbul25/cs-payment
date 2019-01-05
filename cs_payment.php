@@ -97,13 +97,13 @@ function cs_payment_success()
     if ($_SESSION['success'] && array_key_exists('payment_info', $_SESSION)) {
         $data = $_SESSION['payment_info'];
         $output .= "<div class='panel panel-default payment_success'>";
-        $output .= "<div class='panel-heading'>CRITICON BANGLADESH 2019,Event and Workshop Registration</div>";
+        $output .= "<div class='panel-heading'>CRITICON BANGLADESH 2019, Event and Workshop Registration</div>";
         $output .= "<div class='panel-body'><p>Your payment has been accepted successfully. Please bring this receipt in the conference.</p></div>";
         $output .= "<table class='table'>";
+        $output .= '<tr><td>Participation ID:</td><td>'.$data['submission_id'].'</td></tr>';
         $output .= '<tr><td>Name:</td><td>'.$data['cus_name'].'</td></tr>';
         $output .= '<tr><td>Mobile:</td><td>'.$data['cus_phone'].'</td></tr>';
         $output .= '<tr><td>Payment Date:</td><td>'.date('Y-m-d').'</td></tr>';
-        $output .= '<tr><td>Transaction ID:</td><td>'.$data['tran_id'].'</td></tr>';
         $output .= '<tr><td>Payment Amount:</td><td>'.$data['total_amount'].' '.$data['currency'].'</td></tr>';
         $output .= '</table></div>';
     }
