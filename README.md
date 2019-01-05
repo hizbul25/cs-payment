@@ -10,10 +10,10 @@ Project requirement was, user will register an event and then they will pay thro
 
 There is couple of other plugins need before this plugin use.
 
-[Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
-[Ninja Forms Conditional Logic](https://github.com/wpninjas/ninja-forms-conditional-logic)
-[WP Advanced PDF](https://wordpress.org/plugins/wp-advanced-pdf/)
-[Popup Builder](https://wordpress.org/plugins/popup-builder/)
+- [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
+- [Ninja Forms Conditional Logic](https://github.com/wpninjas/ninja-forms-conditional-logic)
+- [WP Advanced PDF](https://wordpress.org/plugins/wp-advanced-pdf/)
+- [Popup Builder](https://wordpress.org/plugins/popup-builder/)
 
 ### Installing
 
