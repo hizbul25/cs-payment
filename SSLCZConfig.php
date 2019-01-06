@@ -1,10 +1,8 @@
 <?php
 
-// define("SSLCZ_STORE_ID", "demotest");
-// define("SSLCZ_STORE_PASSWD", "qwerty");
-
-define("SSLCZ_STORE_ID", "codes5c0f5f2d2a764");
-define("SSLCZ_STORE_PASSWD", "codes5c0f5f2d2a764@ssl");
+// REPLACE IT WITH YOUR CREDENTIALS
+define("SSLCZ_STORE_ID", "demotest");
+define("SSLCZ_STORE_PASSWD", "qwerty");
 
 # IF SANDBOX TRUE, THEN IT WILL CONNECT WITH SSLCOMMERZ SANDBOX (TEST) SYSTEM
 define("SSLCZ_IS_SANDBOX", true);
