@@ -13,14 +13,17 @@ require_once 'SSLCommerz.php';
 define('BASE_URL', 'http://bsccm.test/');
 
 
+
+
 add_action('init', 'cs_ninja_sslcommerz_payment_process');
+
 function cs_ninja_sslcommerz_payment_process() {
     session_start();
 	global $wpdb;
     if (stripos($_SERVER['REQUEST_URI'], 'payment-process') !== false) {
 		$id = $_GET['id'];
 		$post = $wpdb->get_results("SELECT post_id FROM $wpdb->postmeta WHERE meta_value = '". $id ."'");
-        $info = get_metadata('post', $post[0]->post_id);//$wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE post_id = '". $post[0]->post_id ."'");
+        $info = get_metadata('post', $post[0]->post_id);
         $paymentAmount = unserialize($info['calculations'][0]);
         $total = (int) filter_var($paymentAmount['TotalPay']['value'], FILTER_SANITIZE_NUMBER_INT);
 		if(!empty($info)) {
@@ -40,6 +43,7 @@ function cs_ninja_sslcommerz_payment_process() {
             unset($_SESSION['payment_info']);
             $_SESSION['payment_info'] = $data;
             $_SESSION['payment_info']['submission_id'] = $id;
+            $_SESSION['payment_info']['participant_id'] = $id;
 
         	$sslCommerz->initiate($data);
 		}		
@@ -100,7 +104,7 @@ function cs_payment_success()
         $output .= "<div class='panel-heading'>CRITICON BANGLADESH 2019, Event and Workshop Registration</div>";
         $output .= "<div class='panel-body'><p>Your payment has been accepted successfully. Please bring this receipt in the conference.</p></div>";
         $output .= "<table class='table'>";
-        $output .= '<tr><td>Participation ID:</td><td>'.$data['submission_id'].'</td></tr>';
+        $output .= '<tr><td>Participation ID:</td><td>'.$data['participant_id'].'</td></tr>';
         $output .= '<tr><td>Name:</td><td>'.$data['cus_name'].'</td></tr>';
         $output .= '<tr><td>Mobile:</td><td>'.$data['cus_phone'].'</td></tr>';
         $output .= '<tr><td>Payment Date:</td><td>'.date('Y-m-d').'</td></tr>';
@@ -111,8 +115,8 @@ function cs_payment_success()
         $output .= '<h2>Event and Workshop Registration</h2>';
         $output .= '<h3>Something is wrong!! We are unable to accept your payment!!</h3><br>';
     } 
-    unset($_SESSION['payment_info']);
-    //wp_mail($data['cus_email'], 'Event and Workshop Registration', $output . '<br><br> - BSCCM Team', array('Content-Type: text/html; charset=UTF-8'));
+    unset($_SESSION['payment_info']['submission_id']);
+    wp_mail($data['cus_email'], 'Event and Workshop Registration', $output . '<br><br> - BSCCM Team', array('Content-Type: text/html; charset=UTF-8'));
     return $output;
 }
 
@@ -133,4 +137,9 @@ function payment_pending()
 add_shortcode('cs_payment', 'cs_payment_success');
 
 add_shortcode('cs_pending_payment', 'payment_pending');
+
+function cs_enqueue_script() {   
+    wp_enqueue_script( 'cs_payment', plugin_dir_url( __FILE__ ) . 'js/payment_process.js' );
+}
+add_action('wp_enqueue_scripts', 'cs_enqueue_script');
 
